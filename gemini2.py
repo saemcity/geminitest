@@ -4,7 +4,7 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-genai.configure(api_key="AIzaSyCSZNsfkVmyl5c3mPqW4SFLxl0ozybqDrE")
+genai.configure(api_key="")
 
 # 모델 및 대화 설정
 generation_config = {
