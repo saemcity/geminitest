@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대화</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .message-container {
+            max-width: 70%;
+            margin: 0 auto;
+        }
+        .message {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        .user-message {
+            text-align: right;
+            background-color: #DCF8C6;
+        }
+        .assistant-message {
+            text-align: left;
+            background-color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <!-- 대화 내용을 이곳에 추가합니다. -->
+        {% for message in messages %}
+            {% if message['role'] == 'user' %}
+                <div class="message user-message">
+                    사용자: {{ message['content'] }}
+                </div>
+            {% else %}
+                <div class="message assistant-message">
+                    GPT: {{ message['content'] }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</body>
+</html>
+

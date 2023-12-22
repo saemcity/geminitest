@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>벳어스와 대화</title>
+    <style>
+        body {
+            background-color: #d7e8ffff; /* 웹페이지 배경색 변경 */
+            margin: 0; /* body의 기본 margin 제거 */
+        }
+
+        #chat-container {
+            max-width: 66.67vw; /* 웹 페이지의 2/3 크기로 변경 */
+            margin: 1cm auto 4cm; /* 위로 1cm, 아래로 4cm 여백 추가 */
+            border: 1px solid #ffffff00; /* 대화 상자의 테두리 색상을 투명으로 변경 */
+        }
+
+        #chat-history {
+            border: 1px solid #000000; /* 대화 내역의 테두리 색상을 검은색으로 변경 */
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            background-color: #f0f0f0;
+        }
+
+        .user-message {
+            margin-bottom: 10px;
+            color: #007bff; /* 사용자 표시를 파란색으로 변경 */
+        }
+
+        .VET-as-message {
+            margin-bottom: 10px;
+            color: #000000; /* 벳어스 표시를 노란색으로 변경 */
+        }
+
+        #user-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        #user-input-field {
+            flex: 1;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        #send-button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>벳어스와 대화</h1>
+    <div id="chat-container">
+        <div id="chat-history"></div>
+        <div id="user-input">
+            <input type="text" id="user-input-field" placeholder="메시지를 입력하세요" onkeydown="handleKeyPress(event)">
+            <button id="send-button" onclick="sendMessage()">전송</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInputField = document.getElementById('user-input-field');
+            const userMessage = userInputField.value;
+
+            if (userMessage.trim() === '') {
+                return;  // 메시지가 비어있으면 전송하지 않음
+            }
+
+            // Add user message to chat history
+            const chatHistory = document.getElementById('chat-history');
+            const userMessageElement = document.createElement('div');
+            userMessageElement.className = 'user-message';
+            userMessageElement.innerText = `사용자: ${userMessage}`;
+            chatHistory.appendChild(userMessageElement);
+
+            // Clear user input field
+            userInputField.value = '';
+
+            // Send user message to server
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `user_input=${userMessage}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                const VETasMessageElement = document.createElement('div');
+                VETasMessageElement.className = 'VET-as-message';
+                VETasMessageElement.innerText = `벳어스: ${data.response}`;
+                chatHistory.appendChild(VETasMessageElement);
+
+                // Scroll to the bottom of the chat history
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            });
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>
